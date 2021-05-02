@@ -3,7 +3,7 @@
 // var Bottleneck = require("bottleneck");
 
 google.charts.load('current', { packages: ['corechart', 'line'] });
-google.charts.setOnLoadCallback(drawRankingHistory);
+google.charts.setOnLoadCallback(drawRatingHistory);
 
 function ndjsonToArray(ret) {
   let retArray = ret.split('\n');
@@ -33,23 +33,33 @@ var getTeamMembers = function (team) {
       }
     };
     xhttp.onerror = () => {
-      // reject({
-      //   status: xhttp.status,
-      //   statusText: xhttp.statusText
-      // });
-      resolve(
-        [
-          { id: 'tparker24' },
-          { id: 'mitch-parker' }
-        ]
-      );
+      reject({
+        status: xhttp.status,
+        statusText: xhttp.statusText
+      });
+      // resolve(
+      //   [
+      //     { id: 'tparker24' },
+      //     { id: 'mitch-parker' }
+      //   ]
+      // );
     };
     xhttp.send();
   });
 }
 
-var getMemberRanking = (member) => {
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
+}
+
+var getMemberRating = (member, idx) => {
   return new Promise((resolve, reject) => {
+    // delay idx * 200ms
+    sleep(250);
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/user/" + member + "/rating-history", true);
     xhttp.onload = function () {
@@ -71,50 +81,58 @@ var getMemberRanking = (member) => {
   });
 }
 
-function drawRankingHistory() {
+function drawRatingHistory() {
 
   // const limiter = new Bottleneck({
   //   minTime: 333,
   //   maxConcurrent: 1
   // });
 
+  document.getElementById('loading_status').innerHTML = "loading team members...";
   getTeamMembers('shp-chess-club').then(mbrs => {
-    console.log(mbrs.map(m => m.id));
+    // console.log(mbrs.map(m => m.id));
     let members = mbrs.map(m => m.id);
-    members = members.slice(-10);
+    const maxMembers = 20;
+    const startMember = -59;
+    members = (startMember > (- maxMembers - 1)) ? members.slice(-maxMembers) : members.slice(startMember, startMember + maxMembers);
     console.log(members);
     // members = ['tparker24','mitch-parker'];
-
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'changeDate');
-    for (let i = 0; i < members.length; i++) {
-      data.addColumn('number', members[i]);
-    }
+    // for (let i = 0; i < members.length; i++) {
+    //   data.addColumn('number', members[i]);
+    // }
 
-    let rankingPromises = [];
+    let ratingPromises = [];
     for (let i = 0; i < members.length; i++) {
       // data.addColumn('number', members[i]);
-      // rankingPromises.push(limiter.schedule(() => getMemberRanking(members[i])));
-      rankingPromises.push(getMemberRanking(members[i]));
+      // ratingPromises.push(limiter.schedule(() => getMemberRating(members[i])));
+      ratingPromises.push(getMemberRating(members[i], i));
     }
 
-    Promise.all(rankingPromises)
-      .then(histRanking => {
-        console.log(histRanking);
+    document.getElementById('loading_status').innerHTML = "loading team members' history...";
+    Promise.all(ratingPromises)
+      .then(histRating => {
+        // console.log(histRating);
+        document.getElementById('loading_status').innerHTML = "";
 
-        const myGame = 'Rapid';
-        let gameHistRanking = [];
-        histRanking.forEach((member) => {
+        const myGame = 'Puzzles';
+        let gameHistRating = [];
+        histRating.forEach((member) => {
           member.history.forEach(game => {
             if (game.name == myGame) {
-              gameHistRanking.push({
+              gameHistRating.push({
                 member: member.member,
                 points: game.points
               });
             }
           })
         });
-        console.log(gameHistRanking);
+        console.log(gameHistRating);
+
+        for (let i = 0; i < gameHistRating.length; i++) {
+          data.addColumn('number', gameHistRating[i].member);
+        }
 
         let chartData = [];
         for (let i = 0; i < 365; i++) {
@@ -122,7 +140,7 @@ function drawRankingHistory() {
           let targetDate = new Date();
           let rankDate = new Date();
           targetDate.setDate(targetDate.getDate() - i);
-          gameHistRanking.forEach((member) => {
+          gameHistRating.forEach((member) => {
             let points = 0;
             member.points.forEach((rankChange) => {
               rankDate.setFullYear(rankChange[0]);
@@ -151,7 +169,7 @@ function drawRankingHistory() {
             title: 'Rating'
           },
           backgroundColor: '#EFEFEF',
-          'title': 'SHP Chess Club Ranking: Rapid',
+          'title': 'SHP Chess Club Rating: ' + myGame,
           'width': 1000,
           'height': 750
         };

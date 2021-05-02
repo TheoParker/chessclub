@@ -1,7 +1,4 @@
 
-// import { Bottleneck } from './node_modules/bottleneck/lib/Bottleneck';
-// var Bottleneck = require("bottleneck");
-
 google.charts.load('current', { packages: ['corechart', 'line'] });
 google.charts.setOnLoadCallback(drawRatingHistory);
 
@@ -12,6 +9,14 @@ function ndjsonToArray(ret) {
     if (mbr.length > 2) ret.push(JSON.parse(mbr));
   }
   return ret;
+}
+
+function sleep(milliseconds) {
+  const date = Date.now();
+  let currentDate = null;
+  do {
+    currentDate = Date.now();
+  } while (currentDate - date < milliseconds);
 }
 
 var getTeamMembers = function (team) {
@@ -48,14 +53,6 @@ var getTeamMembers = function (team) {
   });
 }
 
-function sleep(milliseconds) {
-  const date = Date.now();
-  let currentDate = null;
-  do {
-    currentDate = Date.now();
-  } while (currentDate - date < milliseconds);
-}
-
 var getMemberRating = (member, idx) => {
   return new Promise((resolve, reject) => {
     // delay idx * 200ms
@@ -83,30 +80,21 @@ var getMemberRating = (member, idx) => {
 
 function drawRatingHistory() {
 
-  // const limiter = new Bottleneck({
-  //   minTime: 333,
-  //   maxConcurrent: 1
-  // });
-
   document.getElementById('loading_status').innerHTML = "loading team members...";
   getTeamMembers('shp-chess-club').then(mbrs => {
     // console.log(mbrs.map(m => m.id));
     let members = mbrs.map(m => m.id);
     const maxMembers = 20;
     const startMember = -59;
-    members = (startMember > (- maxMembers - 1)) ? members.slice(-maxMembers) : members.slice(startMember, startMember + maxMembers);
+    members = (startMember > (- maxMembers - 1))
+      ? members.slice(-maxMembers)
+      : members.slice(startMember, startMember + maxMembers);
     console.log(members);
-    // members = ['tparker24','mitch-parker'];
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'changeDate');
-    // for (let i = 0; i < members.length; i++) {
-    //   data.addColumn('number', members[i]);
-    // }
 
     let ratingPromises = [];
     for (let i = 0; i < members.length; i++) {
-      // data.addColumn('number', members[i]);
-      // ratingPromises.push(limiter.schedule(() => getMemberRating(members[i])));
       ratingPromises.push(getMemberRating(members[i], i));
     }
 
@@ -189,5 +177,4 @@ function drawRatingHistory() {
         console.log(err);
       }
     );
-
 }

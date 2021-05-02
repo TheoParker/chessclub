@@ -1,4 +1,6 @@
 
+import Bottleneck from './node_modules/bottleneck/lib/Bottleneck';
+
 google.charts.load('current', { packages: ['corechart', 'line'] });
 google.charts.setOnLoadCallback(drawBackgroundColor);
 
@@ -13,6 +15,12 @@ function ndjsonToArray(ret) {
 
 var getTeamMembers = function (team) {
   return new Promise((resolve, reject) => {
+    resolve(
+      [
+        { id: 'tparker24' },
+        { id: 'mitch-parker' }
+      ]
+    );
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/team/" + team + "/users", true);
     xhttp.onload = function () {
@@ -63,11 +71,17 @@ var getMemberRanking = (member) => {
 
 function drawBackgroundColor() {
 
+  const limiter = new Bottleneck({
+    minTime: 333,
+    maxConcurrent: 1
+  });
+
   getTeamMembers('shp-chess-club').then(mbrs => {
     console.log(mbrs.map(m => m.id));
     let members = mbrs.map(m => m.id);
+    members = members.slice(-1);
     console.log(members);
-
+    // members = ['tparker24','mitch-parker'];
 
     var data = new google.visualization.DataTable();
     data.addColumn('number', 'changeDate');
@@ -78,7 +92,7 @@ function drawBackgroundColor() {
     let rankingPromises = [];
     for (let i = 0; i < members.length; i++) {
       // data.addColumn('number', members[i]);
-      rankingPromises.push(getMemberRanking(members[i]));
+      rankingPromises.push(limiter.schedule(() => getMemberRanking(members[i])));
     }
 
     Promise.all(rankingPromises)

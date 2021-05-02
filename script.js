@@ -1,13 +1,14 @@
 
-import Bottleneck from './node_modules/bottleneck/lib/Bottleneck';
+// import { Bottleneck } from './node_modules/bottleneck/lib/Bottleneck';
+// var Bottleneck = require("bottleneck");
 
 google.charts.load('current', { packages: ['corechart', 'line'] });
-google.charts.setOnLoadCallback(drawBackgroundColor);
+google.charts.setOnLoadCallback(drawRankingHistory);
 
 function ndjsonToArray(ret) {
   let retArray = ret.split('\n');
   ret = [];
-  for (mbr of retArray) {
+  for (let mbr of retArray) {
     if (mbr.length > 2) ret.push(JSON.parse(mbr));
   }
   return ret;
@@ -15,12 +16,13 @@ function ndjsonToArray(ret) {
 
 var getTeamMembers = function (team) {
   return new Promise((resolve, reject) => {
-    resolve(
-      [
-        { id: 'tparker24' },
-        { id: 'mitch-parker' }
-      ]
-    );
+    // resolve(
+    //   [
+    //     { id: 'tparker24' },
+    //     { id: 'abhatnagar23' },
+    //     { id: 'mitch-parker' }
+    //   ]
+    // );
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/team/" + team + "/users", true);
     xhttp.onload = function () {
@@ -69,17 +71,17 @@ var getMemberRanking = (member) => {
   });
 }
 
-function drawBackgroundColor() {
+function drawRankingHistory() {
 
-  const limiter = new Bottleneck({
-    minTime: 333,
-    maxConcurrent: 1
-  });
+  // const limiter = new Bottleneck({
+  //   minTime: 333,
+  //   maxConcurrent: 1
+  // });
 
   getTeamMembers('shp-chess-club').then(mbrs => {
     console.log(mbrs.map(m => m.id));
     let members = mbrs.map(m => m.id);
-    members = members.slice(-1);
+    members = members.slice(-10);
     console.log(members);
     // members = ['tparker24','mitch-parker'];
 
@@ -92,14 +94,15 @@ function drawBackgroundColor() {
     let rankingPromises = [];
     for (let i = 0; i < members.length; i++) {
       // data.addColumn('number', members[i]);
-      rankingPromises.push(limiter.schedule(() => getMemberRanking(members[i])));
+      // rankingPromises.push(limiter.schedule(() => getMemberRanking(members[i])));
+      rankingPromises.push(getMemberRanking(members[i]));
     }
 
     Promise.all(rankingPromises)
       .then(histRanking => {
         console.log(histRanking);
 
-        const myGame = 'Puzzles';
+        const myGame = 'Rapid';
         let gameHistRanking = [];
         histRanking.forEach((member) => {
           member.history.forEach(game => {
@@ -117,9 +120,19 @@ function drawBackgroundColor() {
         for (let i = 0; i < 365; i++) {
           let dateData = [i];
           let targetDate = new Date();
+          let rankDate = new Date();
           targetDate.setDate(targetDate.getDate() - i);
           gameHistRanking.forEach((member) => {
-            dateData.push(Math.round((1500 * Math.random())));
+            let points = 0;
+            member.points.forEach((rankChange) => {
+              rankDate.setFullYear(rankChange[0]);
+              rankDate.setMonth(rankChange[1]);
+              rankDate.setDate(rankChange[2]);
+              if (rankDate <= targetDate) {
+                points = rankChange[3];
+              }
+            })
+            dateData.push(points);
             // 
           });
           chartData.push(dateData);
@@ -137,7 +150,10 @@ function drawBackgroundColor() {
           vAxis: {
             title: 'Rating'
           },
-          backgroundColor: '#EFEFEF'
+          backgroundColor: '#EFEFEF',
+          'title': 'SHP Chess Club Ranking: Rapid',
+          'width': 1000,
+          'height': 750
         };
 
         var chart = new google.visualization.LineChart(document.getElementById('chart_div'));

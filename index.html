@@ -3,9 +3,11 @@
     type="text/javascript"
     src="https://www.gstatic.com/charts/loader.js"
   ></script>
+  <script type="text/javascript" src="script.js"></script>
 </head>
 <body>
-  <div id="loading_status"></div>
+  <button onclick="prev()">Prev 10</button>
+  <button onclick="next()">Next 10</button>
+  <div id="loading_status" style="font-size:large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight:bold;"></div>
   <div id="chart_div"></div>
-  <script type="module" src="script.js"></script>
 </body>

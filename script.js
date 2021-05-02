@@ -21,13 +21,6 @@ function sleep(milliseconds) {
 
 var getTeamMembers = function (team) {
   return new Promise((resolve, reject) => {
-    // resolve(
-    //   [
-    //     { id: 'tparker24' },
-    //     { id: 'abhatnagar23' },
-    //     { id: 'mitch-parker' }
-    //   ]
-    // );
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/team/" + team + "/users", true);
     xhttp.onload = function () {
@@ -49,7 +42,7 @@ var getTeamMembers = function (team) {
 
 var getMemberRating = (member, idx) => {
   return new Promise((resolve, reject) => {
-    sleep(250);
+    sleep(350);
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/user/" + member + "/rating-history", true);
     xhttp.onload = function () {
@@ -82,7 +75,7 @@ function drawRatingHistory() {
       setTimeout(() => {
 
         let members = mbrs.map(m => m.id);
-        const maxMembers = 15;
+        const maxMembers = 20;
         const startMember = 0 //-59;
         members = (startMember > (- maxMembers - 1))
           ? members.slice(-maxMembers)
@@ -101,7 +94,7 @@ function drawRatingHistory() {
             // console.log(histRating);
             document.getElementById('loading_status').innerHTML = "";
 
-            const myGame = 'Puzzles';
+            const myGame = 'Blitz';
             let gameHistRating = [];
             histRating.forEach((member) => {
               member.history.forEach(game => {
@@ -120,7 +113,8 @@ function drawRatingHistory() {
             }
 
             let chartData = [];
-            for (let i = 0; i < 365; i++) {
+            let numDays = 200;
+            for (let i = 0; i < numDays; i++) {
               let dateData = [i];
               let targetDate = new Date();
               let rankDate = new Date();

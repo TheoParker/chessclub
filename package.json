@@ -13,7 +13,5 @@
   "devDependencies": {
     "lite-server": "^2.6.1"
   },
-  "dependencies": {
-    "bottleneck": "^2.19.5"
-  }
+  "dependencies": {}
 }

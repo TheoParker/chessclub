@@ -1,6 +1,7 @@
 let data = null;
 let chart = null;
 let mbrs = null;
+let mbrHistory = [];
 let startMember = 0;
 let filteredMbrs;
 let myGame = 'Blitz';
@@ -42,6 +43,11 @@ function sleep(milliseconds) {
 // gets all members of given team
 var getTeamMembers = function (team) {
   return new Promise((resolve, reject) => {
+    // only fetch from lichess API if we haven't already gotten the team members
+    if (mbrs != null) {
+      resolve(mbrs);
+      return;
+    }
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/team/" + team + "/users", true);
     xhttp.onload = function () {
@@ -65,16 +71,22 @@ var getTeamMembers = function (team) {
 //gets rating history for given member, idx is never used but i don't want to take it out in case it breaks something lol
 var getMemberRating = (member, idx) => {
   return new Promise((resolve, reject) => {
+    // only fetch from lichess API if we don't already have that member's history
+    if (mbrHistory[member] != null) {
+      resolve(mbrHistory[member]);
+      return;
+    }
     sleep(350);
     var xhttp = new XMLHttpRequest();
     xhttp.open("GET", "https://lichess.org/api/user/" + member + "/rating-history", true);
     xhttp.onload = function () {
       if (this.readyState == 4 && this.status == 200) {
         var ret = JSON.parse(JSON.parse(xhttp.responseText));
-        resolve({
+        mbrHistory[member] = {
           member: member,
           history: ret
-        });
+        };
+        resolve(mbrHistory[member]);
       }
     };
     xhttp.onerror = () => {

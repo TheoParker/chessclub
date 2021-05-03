@@ -1,12 +1,26 @@
-
-google.charts.load('current', { packages: ['corechart', 'line'] });
-google.charts.setOnLoadCallback(drawRatingHistory);
 let data = null;
 let chart = null;
 let mbrs = null;
 let startMember = 0;
-const myGame = 'Blitz';
+let filteredMbrs;
+let myGame = 'Blitz';
 
+google.charts.load('current', { packages: ['corechart', 'line'] });
+
+
+// starts drawing process
+function loadChart (menuGame){
+  startMember = 0;
+  myGame = menuGame;
+  console.log(myGame);
+  document.getElementById("nav-btn1").style.visibility = "visible";
+  document.getElementById("nav-btn2").style.visibility = "visible";
+  google.charts.setOnLoadCallback(drawRatingHistory);
+}
+
+
+
+//Json parse
 function ndjsonToArray(ret) {
   let retArray = ret.split('\n');
   ret = [];
@@ -16,6 +30,7 @@ function ndjsonToArray(ret) {
   return ret;
 }
 
+//sleep
 function sleep(milliseconds) {
   const date = Date.now();
   let currentDate = null;
@@ -24,6 +39,7 @@ function sleep(milliseconds) {
   } while (currentDate - date < milliseconds);
 }
 
+// gets all members of given team
 var getTeamMembers = function (team) {
   return new Promise((resolve, reject) => {
     var xhttp = new XMLHttpRequest();
@@ -45,6 +61,8 @@ var getTeamMembers = function (team) {
   });
 }
 
+
+//gets rating history for given member, idx is never used but i don't want to take it out in case it breaks something lol
 var getMemberRating = (member, idx) => {
   return new Promise((resolve, reject) => {
     sleep(350);
@@ -69,19 +87,31 @@ var getMemberRating = (member, idx) => {
   });
 }
 
+
+
 function drawRatingHistory() {
 
   data = new google.visualization.DataTable();
   chart = new google.visualization.LineChart(document.getElementById('chart_div'));
   data.addColumn('number', 'changeDate');
-  document.getElementById('loading_status').innerHTML = "loading team members...";
+  document.getElementById('loading_status').innerHTML = "Loading team members...";
   getTeamMembers('shp-chess-club')
     .then(ret => {
       mbrs = ret;
       console.log(mbrs);
-      mbrs = mbrs.filter(m => m.perfs.blitz.games > 0);
-      mbrs.sort((a,b) => b.perfs.blitz.rating - a.perfs.blitz.rating);
-      console.log(mbrs.map(m => m.id));
+      var perfGame;
+      if(myGame.toLowerCase() == 'puzzles'){
+        perfGame = 'puzzle';
+      } else {
+        perfGame = myGame.toLowerCase();
+      }
+      // console.log(mbrs.perfs);
+      // console.log(mbrs[20]['perfs']['puzzle']['games']);
+      filteredMbrs = mbrs.filter(m => m['perfs'][perfGame] !== undefined);
+      console.log(filteredMbrs);
+      filteredMbrs = filteredMbrs.filter(m => m['perfs'][perfGame]['games'] > 0);
+      filteredMbrs.sort((a,b) => b["perfs"][perfGame]["rating"] - a["perfs"][perfGame]["rating"]);
+      console.log(filteredMbrs.map(m => m.id));
 
       getMemberHistory(myGame);
     })
@@ -92,6 +122,8 @@ function drawRatingHistory() {
     );
 }
 
+
+//next and prev buttons
 function next() {
   getMemberHistory(myGame, 10);
 }
@@ -99,14 +131,15 @@ function prev() {
   getMemberHistory(myGame, -10);
 }
 
+
 function getMemberHistory(myGame, addMember = 0) {
-  document.getElementById('loading_status').innerHTML = "loading team members' history...";
+  document.getElementById('loading_status').innerHTML = "Loading team members' history...";
   startMember += addMember;
-  startMember = Math.min(mbrs.length - 10, startMember);
+  startMember = Math.min(filteredMbrs.length - 10, startMember);
   startMember = Math.max(0, startMember);
   setTimeout(() => {
 
-    let members = mbrs.map(m => m.id);
+    let members = filteredMbrs.map(m => m.id);
     const maxMembers = 10;
     members = members.slice(startMember, maxMembers + startMember);
     console.log(members);
@@ -118,7 +151,7 @@ function getMemberHistory(myGame, addMember = 0) {
 
     Promise.all(ratingPromises)
       .then(histRating => {
-        document.getElementById('loading_status').innerHTML = "calculating team members' history...";
+        document.getElementById('loading_status').innerHTML = "Calculating team members' history...";
         setTimeout(() => {
 
           let gameHistRating = [];
@@ -143,7 +176,7 @@ function getMemberHistory(myGame, addMember = 0) {
           }
 
           for (let i = 0; i < gameHistRating.length; i++) {
-            data.addColumn('number', (startMember + i + 1) + ') ' + gameHistRating[i].member);
+            data.addColumn('number', (startMember + i + 1) + ': ' + gameHistRating[i].member);
           }
 
           let chartData = [];

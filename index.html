@@ -1,13 +1,45 @@
-<head>
-  <script
-    type="text/javascript"
-    src="https://www.gstatic.com/charts/loader.js"
-  ></script>
-  <script type="text/javascript" src="script.js"></script>
-</head>
-<body>
-  <button onclick="prev()">Prev 10</button>
-  <button onclick="next()">Next 10</button>
-  <div id="loading_status" style="font-size:large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight:bold;"></div>
-  <div id="chart_div"></div>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <script
+      type="text/javascript"
+      src="https://www.gstatic.com/charts/loader.js"
+    ></script>
+    <script type="text/javascript" src="script.js"></script>
+    <link rel="stylesheet" type="text/css" href="styles.css">
+
+  </head>
+  <body>
+    <!-- <button onclick="loadChart()">Load Chart</button> -->
+    <div class="dropdown">
+      <button class="btn">Gamemode</button>
+      <div class="dropdown-content">
+        <a onclick= "loadChart('Bullet')">Bullet</a>
+        <a onclick= "loadChart('Blitz')">Blitz</a>
+        <a onclick= "loadChart('Rapid')">Rapid</a>
+        <a onclick= "loadChart('Puzzles')">Puzzles</a>
+        <a onclick= "loadChart('Classical')">Classical</a>
+        <a onclick= "loadChart('Antichess')">Antichess</a>
+        <a onclick= "loadChart('UltraBullet')">UltraBullet</a>
+        <a onclick= "loadChart('Correspondence')">Correspondence</a>
+        <a onclick= "loadChart('Chess960')">Chess960</a>
+        <a onclick= "loadChart('King of the Hill')">King of the Hill</a>
+        <a onclick= "loadChart('Three-check')">Three-check</a>
+        <a onclick= "loadChart('Atomic')">Atomic</a>
+        <a onclick= "loadChart('Horde')">Horde</a>
+        <a onclick= "loadChart('Racing Kings')">Racing Kings</a>
+        <a onclick= "loadChart('Crazyhouse')">Crazyhouse</a>
+        
+        
+        
+      </div>
+    </div>
+    <button onclick="prev()" class="btn nav-btn" id="nav-btn1">|<<</button>
+    <button onclick="next()" class="btn nav-btn" id="nav-btn2">>>|</button>
+    
+    <div id="loading_status" style="font-size:large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight:bold;"></div>
+    <div id="chart_div"></div>
+  </body>
+  
+</html>

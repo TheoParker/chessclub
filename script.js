@@ -115,6 +115,12 @@ function drawRatingHistory() {
       var perfGame;
       if (myGame.toLowerCase() == 'puzzles') {
         perfGame = 'puzzle';
+      } else if (myGame.toLowerCase() == 'racing kings'){
+        perfGame = 'racingKings';
+      } else if (myGame.toLowerCase() == 'king of the hill'){
+        perfGame = 'kingOfTheHill';
+      } else if (myGame.toLowerCase() == 'three-check'){
+        perfGame = 'threeCheck';
       } else {
         perfGame = myGame.toLowerCase();
       }

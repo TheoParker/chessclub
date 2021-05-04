@@ -2,6 +2,7 @@ let data = null;
 let chart = null;
 let mbrs = null;
 let mbrHistory = [];
+let options = {};
 let startMember = 0;
 let filteredMbrs;
 let myGame = 'Blitz';
@@ -146,6 +147,9 @@ function prev() {
 
 
 function getMemberHistory(myGame, addMember = 0) {
+  let maxPoints = 0;
+  let minPoints = 8000;
+
   document.getElementById('loading_status').innerHTML = "Loading team members' history...";
   startMember += addMember;
   startMember = Math.min(filteredMbrs.length - 10, startMember);
@@ -161,7 +165,6 @@ function getMemberHistory(myGame, addMember = 0) {
     for (let i = 0; i < members.length; i++) {
       ratingPromises.push(getMemberRating(members[i], i));
     }
-
     Promise.all(ratingPromises)
       .then(histRating => {
         document.getElementById('loading_status').innerHTML = "Calculating team members' history...";
@@ -208,6 +211,13 @@ function getMemberHistory(myGame, addMember = 0) {
                 if (rankDate <= targetDate) {
                   points = rankChange[3];
                 }
+                if ((points < minPoints) && (points > 0)) {
+                  minPoints = points;
+                }
+                if (points > maxPoints) {
+                  maxPoints = points;
+                }
+              
               })
               dateData.push(points);
               // 
@@ -219,7 +229,7 @@ function getMemberHistory(myGame, addMember = 0) {
 
           document.getElementById('loading_status').innerHTML = "";
           data.addRows(chartData);
-
+          console.log(minPoints);
           var options = {
             chartArea: {
               width: '55%'
@@ -263,8 +273,8 @@ function getMemberHistory(myGame, addMember = 0) {
                 format: 'decimal'
               },
               viewWindow: {
-                min: 1000,
-                max: 2000,
+                min: minPoints - 100,
+                max: maxPoints + 100,
               }
             },
             width: 1000,

@@ -9,7 +9,7 @@ google.charts.load('current', { packages: ['corechart', 'line'] });
 
 
 // starts drawing process
-function loadChart (menuGame){
+function loadChart(menuGame) {
   startMember = 0;
   myGame = menuGame;
   console.log(myGame);
@@ -100,7 +100,7 @@ function drawRatingHistory() {
       mbrs = ret;
       console.log(mbrs);
       var perfGame;
-      if(myGame.toLowerCase() == 'puzzles'){
+      if (myGame.toLowerCase() == 'puzzles') {
         perfGame = 'puzzle';
       } else {
         perfGame = myGame.toLowerCase();
@@ -108,9 +108,10 @@ function drawRatingHistory() {
       // console.log(mbrs.perfs);
       // console.log(mbrs[20]['perfs']['puzzle']['games']);
       filteredMbrs = mbrs.filter(m => m['perfs'][perfGame] !== undefined);
+      filteredMbrs = filteredMbrs.filter(m => m.id != 'leggiadravendetta' && m.id != 'ahamrah23');
       console.log(filteredMbrs);
       filteredMbrs = filteredMbrs.filter(m => m['perfs'][perfGame]['games'] > 0);
-      filteredMbrs.sort((a,b) => b["perfs"][perfGame]["rating"] - a["perfs"][perfGame]["rating"]);
+      filteredMbrs.sort((a, b) => b["perfs"][perfGame]["rating"] - a["perfs"][perfGame]["rating"]);
       console.log(filteredMbrs.map(m => m.id));
 
       getMemberHistory(myGame);
@@ -171,12 +172,12 @@ function getMemberHistory(myGame, addMember = 0) {
             data.removeRows(0, data.getNumberOfRows());
           }
           console.log(data.getTableProperties());
-          if (data.getNumberOfColumns() > 1 ) {
-             data.removeColumns(1, data.getNumberOfColumns() - 1);
+          if (data.getNumberOfColumns() > 1) {
+            data.removeColumns(1, data.getNumberOfColumns() - 1);
           }
 
           for (let i = 0; i < gameHistRating.length; i++) {
-            data.addColumn('number', (startMember + i + 1) + ': ' + gameHistRating[i].member);
+            data.addColumn('number', (startMember + i + 1) + ': ' + gameHistRating[i].member + " - " + gameHistRating[i]["points"][gameHistRating[i]["points"].length - 1][3]);
           }
 
           let chartData = [];
@@ -208,6 +209,10 @@ function getMemberHistory(myGame, addMember = 0) {
           data.addRows(chartData);
 
           var options = {
+            chartArea: {
+              width: '55%'
+            },
+            // curveType: 'function',
             backgroundColor: '#EFEFEF',
             title: 'SHP Chess Club Rating: ' + myGame,
             titleTextStyle: {
@@ -245,6 +250,10 @@ function getMemberHistory(myGame, addMember = 0) {
                 fontName: "Georgia",
                 format: 'decimal'
               },
+              viewWindow: {
+                min: 1000,
+                max: 2000,
+              }
             },
             width: 1000,
             height: 750
@@ -252,12 +261,12 @@ function getMemberHistory(myGame, addMember = 0) {
 
           chart.draw(data, options);
 
-        },0);
+        }, 0);
       })
       .catch(
         err => {
           console.log(err);
         }
       );
-  },0);
+  }, 0);
 }

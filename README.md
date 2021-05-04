@@ -1,2 +1,2 @@
 # chessclub
-Chess club displays the history of ratings from SHP Chess Club on lichess.org.
+*chessclub* displays the history of lichess.org ratings of SHP Chess Club team members.

@@ -82,7 +82,7 @@ var getMemberRating = (member, idx) => {
     xhttp.open("GET", "https://lichess.org/api/user/" + member + "/rating-history", true);
     xhttp.onload = function () {
       if (this.readyState == 4 && this.status == 200) {
-        var ret = JSON.parse(JSON.parse(xhttp.responseText));
+        var ret = JSON.parse(xhttp.responseText);
         mbrHistory[member] = {
           member: member,
           history: ret

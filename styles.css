@@ -5,6 +5,8 @@
     font-size: 20px;
     border: none;
     border-radius: 4px;
+    margin: 0px;
+    margin-top: 5px;
 }
 
 .dropdown {
@@ -22,6 +24,10 @@
     box-shadow: 0px 8px 16px 0px rgba(0, 0, 0, 0.2);
     z-index: 1;
     
+}
+
+.gamebtn {
+    width: 100%;
 }
 
 .dropdown-content a {
@@ -44,5 +50,71 @@
 }
 
 .nav-btn {
-    visibility: hidden;
+    /*  visibility: hidden; */
+    width: 45%;
+}
+
+.btnlist {
+    width: 10%;
+    float: left;
+    margin: 2%;
+
+}
+
+body {
+    display: flex;
+    margin: 0px;
+    
+}
+
+
+div {
+    margin: 10px;
+}
+
+#chart_div div{
+    margin:0px;
+}
+
+#nav-btn2 {
+    
+    /* justify-content: right; */
+    margin-left: 2px;
+    
+}
+
+#nav-btn1 {
+    margin-right: 2px;
+}
+
+.navbtnlist{
+    display: flex;
+    justify-content: center;
+    margin:0px;
+}
+
+#chart_div {
+    margin: 0px;
+    margin-top: 10px;
+}
+#loading_status {
+    margin: 0;
+    padding: 0;
+}
+
+#firstbtn {
+    margin-top: 0px;
+}
+
+img {
+    margin-top: 2%;
+    height: 389.979px;
+
+}
+
+#imgdiv {
+    display: flex;
+    justify-content: center;
+    
+    width: 86%;
 }

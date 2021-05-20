@@ -6,17 +6,47 @@ let options = {};
 let startMember = 0;
 let filteredMbrs;
 let myGame = 'Blitz';
+let btndisplay = false;
 
 google.charts.load('current', { packages: ['corechart', 'line'] });
 
 
 // starts drawing process
 function loadChart(menuGame) {
+
+  if (btndisplay == false) {
+    var nbtn1 = document.createElement("BUTTON");
+    nbtn1.innerHTML = "|<<";
+    nbtn1.classList.add("btn");
+    nbtn1.classList.add("nav-btn");
+    nbtn1.setAttribute("id", "nav-btn1");
+    nbtn1.setAttribute("onclick", "prev()");
+    var nbtn2 = document.createElement("BUTTON");
+    nbtn2.innerHTML = ">>|";
+    nbtn2.classList.add("btn");
+    nbtn2.classList.add("nav-btn");
+    nbtn2.setAttribute("id", "nav-btn2");
+    nbtn2.setAttribute("onclick", "next()");
+
+    document.getElementById("navbtnlistid").appendChild(nbtn1);
+    document.getElementById("navbtnlistid").appendChild(nbtn2);
+    document.getElementById("navbtnlistid").style.margin = "10px";
+    document.getElementById("navbtnlistid").style.marginTop = "0px";
+
+    var idiv = document.getElementById("imgdiv");
+    idiv.remove();
+
+    btndisplay = true;
+  }
+
   startMember = 0;
   myGame = menuGame;
   console.log(myGame);
-  document.getElementById("nav-btn1").style.visibility = "visible";
-  document.getElementById("nav-btn2").style.visibility = "visible";
+
+
+
+  // document.getElementById("nav-btn1").style.visibility = "visible";
+  // document.getElementById("nav-btn2").style.visibility = "visible";
   google.charts.setOnLoadCallback(drawRatingHistory);
 }
 
@@ -115,11 +145,11 @@ function drawRatingHistory() {
       var perfGame;
       if (myGame.toLowerCase() == 'puzzles') {
         perfGame = 'puzzle';
-      } else if (myGame.toLowerCase() == 'racing kings'){
+      } else if (myGame.toLowerCase() == 'racing kings') {
         perfGame = 'racingKings';
-      } else if (myGame.toLowerCase() == 'king of the hill'){
+      } else if (myGame.toLowerCase() == 'king of the hill') {
         perfGame = 'kingOfTheHill';
-      } else if (myGame.toLowerCase() == 'three-check'){
+      } else if (myGame.toLowerCase() == 'three-check') {
         perfGame = 'threeCheck';
       } else {
         perfGame = myGame.toLowerCase();
@@ -223,7 +253,7 @@ function getMemberHistory(myGame, addMember = 0) {
                 if (points > maxPoints) {
                   maxPoints = points;
                 }
-              
+
               })
               dateData.push(points);
               // 
@@ -284,7 +314,7 @@ function getMemberHistory(myGame, addMember = 0) {
               }
             },
             width: 1000,
-            height: 750
+            height: 500
           };
 
           chart.draw(data, options);

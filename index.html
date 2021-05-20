@@ -1,45 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8">
-    <script
-      type="text/javascript"
-      src="https://www.gstatic.com/charts/loader.js"
-    ></script>
-    <script type="text/javascript" src="script.js"></script>
-    <link rel="stylesheet" type="text/css" href="styles.css">
-    <link rel="icon" href="chesspiece.png">
-    <title>SHP Chess Club</title>
-  </head>
-  <body>
-    <!-- <button onclick="loadChart()">Load Chart</button> -->
-    <div class="dropdown">
-      <button class="btn">Gamemode</button>
-      <div class="dropdown-content">
-        <a onclick= "loadChart('Bullet')">Bullet</a>
-        <a onclick= "loadChart('Blitz')">Blitz</a>
-        <a onclick= "loadChart('Rapid')">Rapid</a>
-        <a onclick= "loadChart('Puzzles')">Puzzles</a>
-        <a onclick= "loadChart('Classical')">Classical</a>
-        <a onclick= "loadChart('Antichess')">Antichess</a>
-        <a onclick= "loadChart('UltraBullet')">UltraBullet</a>
-        <a onclick= "loadChart('Chess960')">Chess960</a>
-        <a onclick= "loadChart('King of the Hill')">King of the Hill</a>
-        <a onclick= "loadChart('Three-check')">Three-check</a>
-        <a onclick= "loadChart('Atomic')">Atomic</a>
-        <a onclick= "loadChart('Horde')">Horde</a>
-        <a onclick= "loadChart('Racing Kings')">Racing Kings</a>
-        <a onclick= "loadChart('Crazyhouse')">Crazyhouse</a>
-        
-        
-        
-      </div>
+
+<head>
+  <meta charset="UTF-8">
+  <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  <script type="text/javascript" src="script.js"></script>
+  <link rel="stylesheet" type="text/css" href="styles.css">
+  <link rel="icon" href="chesspiece.png">
+  <title>SHP Chess Club</title>
+</head>
+
+<body>
+  <!-- <button onclick="loadChart()">Load Chart</button> -->
+  <div class="btnlist">
+    <div class ="navbtnlist" id ="navbtnlistid">
+      <!-- <button onclick="prev()" class="btn nav-btn" id="nav-btn1">|<<</button>
+    <button onclick="next()" class="btn nav-btn" id="nav-btn2">>>|</button> -->
+
     </div>
-    <button onclick="prev()" class="btn nav-btn" id="nav-btn1">|<<</button>
-    <button onclick="next()" class="btn nav-btn" id="nav-btn2">>>|</button>
-    
-    <div id="loading_status" style="font-size:large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight:bold;"></div>
-    <div id="chart_div"></div>
-  </body>
+    <button class="btn gamebtn" id="firstbtn" onclick="loadChart('Bullet')">Bullet</button>
+    <button class="btn gamebtn" onclick="loadChart('Blitz')">Blitz</button>
+    <button class="btn gamebtn" onclick="loadChart('Rapid')">Rapid</button>
+    <button class="btn gamebtn" onclick="loadChart('Puzzles')">Puzzles</button>
+    <button class="btn gamebtn" onclick="loadChart('Classical')">Classical</button>
+    <button class="btn gamebtn" onclick="loadChart('Antichess')">Antichess</button>
+    <button class="btn gamebtn" onclick="loadChart('UltraBullet')">UltraBullet</button>
+    <button class="btn gamebtn" onclick="loadChart('Chess960')">Chess960</button>
+    <!-- <button class="btn gamebtn" onclick="loadChart('King of the Hill')">King of the Hill</button> -->
+    <!-- <button class="btn gamebtn" onclick="loadChart('Three-check')">Three-check</button> -->
+    <!-- <button class="btn gamebtn" onclick="loadChart('Atomic')">Atomic</button> -->
+    <!-- <button class="btn gamebtn" onclick="loadChart('Horde')">Horde</button> -->
+    <!-- <button class="btn gamebtn" onclick="loadChart('Racing Kings')">Racing Kings</button> -->
+    <button class="btn gamebtn" onclick="loadChart('Crazyhouse')">Crazyhouse</button>
+  </div>
+
   
+  <div id="loading_status"
+    style="font-size:large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight:bold;">
+  </div>
+  <div id="chart_div"></div>
+  <div id="imgdiv">
+    <img src="/Chess Club Logo.png" id="main-img">
+
+  </div>
+  </body>
+
 </html>

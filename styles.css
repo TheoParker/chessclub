@@ -56,13 +56,14 @@
 
 .btnlist {
     width: 10%;
-    float: left;
+    /* float: left; */
     margin: 2%;
 
 }
 
 body {
     display: flex;
+    /* flex-direction: column; */
     margin: 0px;
     
 }

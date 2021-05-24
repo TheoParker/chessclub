@@ -13,5 +13,9 @@
   "devDependencies": {
     "lite-server": "^2.6.1"
   },
-  "dependencies": {}
+  "dependencies": {
+    "express": "^4.17.1",
+    "fs": "0.0.1-security",
+    "node-cron": "^3.0.0"
+  }
 }

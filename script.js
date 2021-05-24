@@ -84,7 +84,10 @@ var getTeamMembers = function (team) {
     xhttp.onload = function () {
       if (this.readyState == 4 && this.status == 200) {
         let ret = xhttp.responseText;
+        console.log("response text: " + ret);
         ret = ndjsonToArray(ret);
+        
+        console.log("response text2: " + ret);
         resolve(ret);
       }
     };

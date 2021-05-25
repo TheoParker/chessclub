@@ -158,5 +158,5 @@ var getMemberRating = (member, idx) => {
         xhttp.send();
     });
 }
-
+app.listen(3000);
 console.log('Running');

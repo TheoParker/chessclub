@@ -32,6 +32,7 @@ function sleep(milliseconds) {
 var getTeamMembers = function (team) {
     return new Promise((resolve, reject) => {
         var xhttp = new XMLHttpRequest();
+        console.log("here");
         xhttp.open("GET", "https://lichess.org/api/team/" + myTeam + "/users", true);
         xhttp.onload = function () {
             if (this.readyState == 4 && this.status == 200) {

@@ -12,7 +12,7 @@ const delayIncrement = 1000;
 
 app = express();
 
-cron.schedule('* * * * * * ', function (){
+cron.schedule('* * * * * *', function (){
     console.log('test');
 
 });

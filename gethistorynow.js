@@ -43,6 +43,9 @@ var getTeamMembers = function (team) {
             }
         };
         xhttp.onerror = () => {
+            console.log(xhttp.status);
+            console.log(xhttp.statusText);
+            
             reject({
                 status: xhttp.status,
                 statusTest: xhttp.statusText

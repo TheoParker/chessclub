@@ -12,6 +12,12 @@ const delayIncrement = 1000;
 
 app = express();
 
+cron.schedule('* * * * * * ', function (){
+    console.log('test');
+
+});
+
+
 cron.schedule('0 0 * * *', function () {
     getTeamMembers().then((users) => {
 

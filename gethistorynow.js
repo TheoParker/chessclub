@@ -35,7 +35,7 @@ var getTeamMembers = function (team) {
         xhttp.open("GET", "https://lichess.org/api/team/" + myTeam + "/users", true);
         xhttp.onload = function () {
             if (this.readyState == 4 && this.status == 200) {
-                // console.log(xhttp.responseText);
+                console.log(xhttp.responseText);
                 // let ret = JSON.parse(xhttp.responseText);
                 let ret = ndjsonToArray(xhttp.responseText);
                 resolve(ret);
@@ -95,7 +95,7 @@ getTeamMembers().then((users) => {
 
     for (let i = 0; i < users.length; i++) {
         delay = 1000 * i;
-        // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
+        console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
 
         let thismember = users[i]['id'];
 
@@ -150,4 +150,4 @@ getTeamMembers().then((users) => {
     // console.log(ret);
 });
 
-app.listen(3001);
+app.listen(3000);

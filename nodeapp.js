@@ -111,7 +111,7 @@ function drawRatingHistory() {
     data = new google.visualization.DataTable();
     chart = new google.visualization.LineChart(document.getElementById('chart_div'));
     data.addColumn('number', 'changeDate');
-    document.getElementById('loading_status').innerHTML = "Loading team members...";
+    // document.getElementById('loading_status').innerHTML = "Loading team members...";
     console.log(mbrs);
     if (mbrs != null) {
         console.log(mbrs);
@@ -268,7 +268,7 @@ function getMemberHistory(myGame, addMember = 0) {
     let maxPoints = 0;
     let minPoints = 8000;
 
-    document.getElementById('loading_status').innerHTML = "Loading team members' history...";
+    // document.getElementById('loading_status').innerHTML = "Loading team members' history...";
     startMember += addMember;
     startMember = Math.min(filteredMbrs.length - 10, startMember);
     startMember = Math.max(0, startMember);
@@ -285,7 +285,7 @@ function getMemberHistory(myGame, addMember = 0) {
         }
         Promise.all(ratingPromises)
             .then(histRating => {
-                document.getElementById('loading_status').innerHTML = "Calculating team members' history...";
+                // document.getElementById('loading_status').innerHTML = "Calculating team members' history...";
                 setTimeout(() => {
 
                     let gameHistRating = [];

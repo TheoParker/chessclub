@@ -16,7 +16,7 @@ var mdata;
 var getDataFromFile = () => {
     return new Promise((resolve, reject) => {
         var xhttp = new XMLHttpRequest();
-        xhttp.open("GET", "cs.shschools.org/chess/member-data.json", true);
+        xhttp.open("GET", "member-data.json", true);
         xhttp.onload = function () {
             if (this.readyState == 4 && this.status == 200) {
                 let ret = xhttp.responseText;

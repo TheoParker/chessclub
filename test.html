@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+  
+    <script type="text/javascript" src="/nodeapp.js"></script>
+    
+  
+</head>
+<body>
+    <!-- <button onclick="loadChart()">Load Chart</button> -->
+    <div class="btnlist">
+      <div class ="navbtnlist" id ="navbtnlistid">
+        <!-- <button onclick="prev()" class="btn nav-btn" id="nav-btn1">|<<</button>
+      <button onclick="next()" class="btn nav-btn" id="nav-btn2">>>|</button> -->
+  
+      </div>
+      <button class="btn gamebtn" id="firstbtn" onclick="loadChart('Bullet')">Bullet</button>
+      <button class="btn gamebtn" onclick="loadChart('Blitz')">Blitz</button>
+      <button class="btn gamebtn" onclick="loadChart('Rapid')">Rapid</button>
+      <button class="btn gamebtn" onclick="loadChart('Puzzles')">Puzzles</button>
+      <button class="btn gamebtn" onclick="loadChart('Classical')">Classical</button>
+      <button class="btn gamebtn" onclick="loadChart('Antichess')">Antichess</button>
+      <button class="btn gamebtn" onclick="loadChart('UltraBullet')">UltraBullet</button>
+      <button class="btn gamebtn" onclick="loadChart('Chess960')">Chess960</button>
+      <!-- <button class="btn gamebtn" onclick="loadChart('King of the Hill')">King of the Hill</button> -->
+      <!-- <button class="btn gamebtn" onclick="loadChart('Three-check')">Three-check</button> -->
+      <!-- <button class="btn gamebtn" onclick="loadChart('Atomic')">Atomic</button> -->
+      <!-- <button class="btn gamebtn" onclick="loadChart('Horde')">Horde</button> -->
+      <!-- <button class="btn gamebtn" onclick="loadChart('Racing Kings')">Racing Kings</button> -->
+      <button class="btn gamebtn" onclick="loadChart('Crazyhouse')">Crazyhouse</button>
+    </div>
+  
+    
+    <div id="loading_status"
+      style="font-size:large; font-family:Cambria, Cochin, Georgia, Times, 'Times New Roman', serif; font-weight:bold;">
+    </div>
+    <div id="chart_div"></div>
+    <div id="imgdiv">
+      <img src="./clublogo.png" id="main-img">
+  
+    </div>
+    </body>
+  
+  
+</html>

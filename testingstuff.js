@@ -12,68 +12,8 @@ const delayIncrement = 1000;
 
 app = express();
 
-cron.schedule('0 0 * * *', function () {
-    getTeamMembers().then((users) => {
-
-    
-
-        for (let i = 0; i < users.length; i++) {
-            delay = 1000 * i;
-            // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
-    
-            let thismember = users[i]['id'];
-    
-            ratingPromises.push(new Promise(async function (resolve) {
-                await new Promise(res => setTimeout(res, delay));
-    
-                let result = await new Promise(r => {
-    
-    
-                    if (mbrHistory[thismember] != null) {
-                        resolve(mbrHistory[thismember]);
-                        return;
-                    }
-                    console.log('before sleep');
-                    sleep(1000);
-                    // console.log('after sleep');
-    
-    
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.open("GET", "https://lichess.org/api/user/" + thismember + "/rating-history", true);
-                    xhttp.onload = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            var rText = JSON.parse(xhttp.responseText);
-                            mbrHistory[thismember] = {
-                                member: thismember,
-                                history: rText
-                            };
-                            console.log('before resolve');
-                            resolve(mbrHistory[thismember]);
-                        }
-                    };
-                    xhttp.onerror = () => {
-                        reject({
-                            status: xhttp.status,
-                            statusText: xhttp.statusText
-                        });
-                    };
-                    xhttp.send();
-                });
-                resolve(result);
-    
-            }));
-        }
-    
-    
-        Promise.all(ratingPromises).then((e) => {
-            console.log(e);
-            let data = JSON.stringify(e);
-            fs.writeFileSync('member-data.json', data);
-        });
-        // console.log(ret);
-    });
-    
-    
+cron.schedule('* * * * * *', function () {
+    console.log('1');
 })
 
 function ndjsonToArray(ret) {
@@ -153,4 +93,64 @@ var getMemberRating = (member, idx) => {
     });
 }
 
-console.log('Running');
+
+getTeamMembers().then((users) => {
+
+    
+
+    for (let i = 0; i < users.length; i++) {
+        delay = 1000 * i;
+        // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
+
+        let thismember = users[i]['id'];
+
+        ratingPromises.push(new Promise(async function (resolve) {
+            await new Promise(res => setTimeout(res, delay));
+
+            let result = await new Promise(r => {
+
+
+                if (mbrHistory[thismember] != null) {
+                    resolve(mbrHistory[thismember]);
+                    return;
+                }
+                console.log('before sleep');
+                sleep(1000);
+                // console.log('after sleep');
+
+
+                var xhttp = new XMLHttpRequest();
+                xhttp.open("GET", "https://lichess.org/api/user/" + thismember + "/rating-history", true);
+                xhttp.onload = function () {
+                    if (this.readyState == 4 && this.status == 200) {
+                        var rText = JSON.parse(xhttp.responseText);
+                        mbrHistory[thismember] = {
+                            member: thismember,
+                            history: rText
+                        };
+                        console.log('before resolve');
+                        resolve(mbrHistory[thismember]);
+                    }
+                };
+                xhttp.onerror = () => {
+                    reject({
+                        status: xhttp.status,
+                        statusText: xhttp.statusText
+                    });
+                };
+                xhttp.send();
+            });
+            resolve(result);
+
+        }));
+    }
+
+
+    Promise.all(ratingPromises).then((e) => {
+        console.log(e);
+        let data = JSON.stringify(e);
+        fs.writeFileSync('member-data.json', data);
+    });
+    // console.log(ret);
+});
+

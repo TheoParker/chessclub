@@ -32,11 +32,11 @@ function sleep(milliseconds) {
 var getTeamMembers = function (team) {
     return new Promise((resolve, reject) => {
         var xhttp = new XMLHttpRequest();
-        console.log("here");
+        // console.log("here");
         xhttp.open("GET", "https://lichess.org/api/team/" + myTeam + "/users", true);
         xhttp.onload = function () {
             if (this.readyState == 4 && this.status == 200) {
-                console.log(xhttp.responseText);
+                // console.log(xhttp.responseText);
                 // let ret = JSON.parse(xhttp.responseText);
                 let ret = ndjsonToArray(xhttp.responseText);
                 resolve(ret);
@@ -99,9 +99,10 @@ getTeamMembers().then((users) => {
 
     for (let i = 0; i < users.length; i++) {
         delay = 1000 * i;
-        console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
+        // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
 
         let thismember = users[i]['id'];
+        console.log(thismember);
 
         ratingPromises.push(new Promise(async function (resolve) {
             await new Promise(res => setTimeout(res, delay));
@@ -113,7 +114,7 @@ getTeamMembers().then((users) => {
                     resolve(mbrHistory[thismember]);
                     return;
                 }
-                console.log('before sleep');
+                // console.log('before sleep');
                 sleep(1000);
                 // console.log('after sleep');
 
@@ -127,7 +128,7 @@ getTeamMembers().then((users) => {
                             member: thismember,
                             history: rText
                         };
-                        console.log('before resolve');
+                        console.log('updated: ' + thismember);
                         resolve(mbrHistory[thismember]);
                     }
                 };
@@ -146,10 +147,10 @@ getTeamMembers().then((users) => {
 
 
     Promise.all(ratingPromises).then((e) => {
-        console.log(e);
+        // console.log(e);
         let data = JSON.stringify(e);
         fs.writeFileSync('member-data.json', data);
-        console.log('Updated');
+        console.log('Done');
     });
     // console.log(ret);
 });

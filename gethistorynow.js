@@ -30,6 +30,7 @@ function sleep(milliseconds) {
 }
 
 var getTeamMembers = function (team) {
+    console.log('getting team members...');
     return new Promise((resolve, reject) => {
         var xhttp = new XMLHttpRequest();
         // console.log("here");
@@ -95,6 +96,7 @@ var getMemberRating = (member, idx) => {
 
 getTeamMembers().then((users) => {
 
+    console.log('updating data...');
     
 
     for (let i = 0; i < users.length; i++) {
@@ -102,7 +104,7 @@ getTeamMembers().then((users) => {
         // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
 
         let thismember = users[i]['id'];
-        console.log(thismember);
+        // console.log(thismember);
 
         ratingPromises.push(new Promise(async function (resolve) {
             await new Promise(res => setTimeout(res, delay));
@@ -155,4 +157,4 @@ getTeamMembers().then((users) => {
     // console.log(ret);
 });
 
-app.listen(3000);
+app.listen(3001);

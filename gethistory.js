@@ -12,76 +12,6 @@ const delayIncrement = 1000;
 
 app = express();
 
-// cron.schedule('* * * * * *', function (){
-//     console.log('test');
-
-// });
-
-
-cron.schedule('0 0 * * *', function () {
-    getTeamMembers().then((users) => {
-
-    
-
-        for (let i = 0; i < users.length; i++) {
-            delay = 1000 * i;
-            // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
-    
-            let thismember = users[i]['id'];
-    
-            ratingPromises.push(new Promise(async function (resolve) {
-                await new Promise(res => setTimeout(res, delay));
-    
-                let result = await new Promise(r => {
-    
-    
-                    if (mbrHistory[thismember] != null) {
-                        resolve(mbrHistory[thismember]);
-                        return;
-                    }
-                    console.log('before sleep');
-                    sleep(1000);
-                    // console.log('after sleep');
-    
-    
-                    var xhttp = new XMLHttpRequest();
-                    xhttp.open("GET", "https://lichess.org/api/user/" + thismember + "/rating-history", true);
-                    xhttp.onload = function () {
-                        if (this.readyState == 4 && this.status == 200) {
-                            var rText = JSON.parse(xhttp.responseText);
-                            mbrHistory[thismember] = {
-                                member: thismember,
-                                history: rText
-                            };
-                            console.log('before resolve');
-                            resolve(mbrHistory[thismember]);
-                        }
-                    };
-                    xhttp.onerror = () => {
-                        reject({
-                            status: xhttp.status,
-                            statusText: xhttp.statusText
-                        });
-                    };
-                    xhttp.send();
-                });
-                resolve(result);
-    
-            }));
-        }
-    
-    
-        Promise.all(ratingPromises).then((e) => {
-            console.log(e);
-            let data = JSON.stringify(e);
-            fs.writeFileSync('member-data.json', data);
-        });
-        // console.log(ret);
-    });
-    
-    
-})
-
 function ndjsonToArray(ret) {
     let retArray = ret.split('\n');
     ret = [];
@@ -100,8 +30,10 @@ function sleep(milliseconds) {
 }
 
 var getTeamMembers = function (team) {
+    console.log('getting team members...');
     return new Promise((resolve, reject) => {
         var xhttp = new XMLHttpRequest();
+        // console.log("here");
         xhttp.open("GET", "https://lichess.org/api/team/" + myTeam + "/users", true);
         xhttp.onload = function () {
             if (this.readyState == 4 && this.status == 200) {
@@ -112,6 +44,9 @@ var getTeamMembers = function (team) {
             }
         };
         xhttp.onerror = () => {
+            console.log(xhttp.status);
+            console.log(xhttp.statusText);
+
             reject({
                 status: xhttp.status,
                 statusTest: xhttp.statusText
@@ -158,5 +93,71 @@ var getMemberRating = (member, idx) => {
         xhttp.send();
     });
 }
+
+cron.schedule('0 0 * * *', function () {
+    getTeamMembers().then((users) => {
+
+        console.log('updating data...');
+
+
+        for (let i = 0; i < users.length; i++) {
+            delay = 1000 * i;
+            // console.log(ret[i]['member']);//getMemberRating(ret[i]['id'], i)
+
+            let thismember = users[i]['id'];
+            // console.log(thismember);
+
+            ratingPromises.push(new Promise(async function (resolve) {
+                await new Promise(res => setTimeout(res, delay));
+
+                let result = await new Promise(r => {
+
+
+                    if (mbrHistory[thismember] != null) {
+                        resolve(mbrHistory[thismember]);
+                        return;
+                    }
+                    // console.log('before sleep');
+                    sleep(1000);
+                    // console.log('after sleep');
+
+
+                    var xhttp = new XMLHttpRequest();
+                    xhttp.open("GET", "https://lichess.org/api/user/" + thismember + "/rating-history", true);
+                    xhttp.onload = function () {
+                        if (this.readyState == 4 && this.status == 200) {
+                            var rText = JSON.parse(xhttp.responseText);
+                            mbrHistory[thismember] = {
+                                member: thismember,
+                                history: rText
+                            };
+                            console.log('updated: ' + thismember);
+                            resolve(mbrHistory[thismember]);
+                        }
+                    };
+                    xhttp.onerror = () => {
+                        reject({
+                            status: xhttp.status,
+                            statusText: xhttp.statusText
+                        });
+                    };
+                    xhttp.send();
+                });
+                resolve(result);
+
+            }));
+        }
+
+
+        Promise.all(ratingPromises).then((e) => {
+            // console.log(e);
+            let data = JSON.stringify(e);
+            fs.writeFileSync('member-data.json', data);
+            console.log('Done');
+        });
+        // console.log(ret);
+    });
+});
+
+
 app.listen(3000);
-console.log('Running');

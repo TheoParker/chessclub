@@ -1,4 +1,4 @@
-const { Chess } = require('./node_modules/chess.js')
+const { Chess } = require('chess.js')
 const chess = new Chess()
 
 while (!chess.game_over()) {
